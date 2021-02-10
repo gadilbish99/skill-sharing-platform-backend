@@ -1,5 +1,7 @@
+require('dotenv/config');
 const express = require('express');
 const router = express.Router();
+const { verify } = require('jsonwebtoken');
 const { hash, compare } = require('bcryptjs');
 const {
   createAccessToken,
@@ -60,6 +62,7 @@ router.post('/login', async function(req, res, next) {
 
 // 4. Get a new access token with a refresh token
 router.post('/refresh_token', async (req, res) => {
+  const db = req.app.locals.db;
   const token = req.cookies.refreshtoken;
   // If we don't have a token in our request
   if (!token) return res.send({ accesstoken: '' });

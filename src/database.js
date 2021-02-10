@@ -41,6 +41,11 @@ class Database {
     return post;
   }
 
+  async deletePostByID(id) {
+    const post = await PostModel.findByIdAndDelete(id);
+    return post;
+  }
+
   // User methods
   async addUser(newUser) {    
     const user = await UserModel.create(newUser);
