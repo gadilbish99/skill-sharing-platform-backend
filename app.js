@@ -5,12 +5,16 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
+const Database = require('./src/database');
 const indexRouter = require('./routes/index');
+const userRouter = require('./routes/user');
 const usersRouter = require('./routes/users');
 const uploadRouter = require('./routes/upload');
 const postRouter = require('./routes/post');
 
 const app = express();
+
+app.locals.db = new Database();;
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -25,6 +29,7 @@ app.use(
 );
 
 app.use('/', indexRouter);
+app.use('/user', userRouter);
 app.use('/users', usersRouter);
 app.use('/upload', uploadRouter);
 app.use('/post', postRouter);
