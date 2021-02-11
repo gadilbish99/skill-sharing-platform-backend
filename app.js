@@ -7,32 +7,24 @@ const cors = require('cors');
 
 const Database = require('./src/database');
 const indexRouter = require('./routes/index');
-const userRouter = require('./routes/user');
-const usersRouter = require('./routes/users');
-const uploadRouter = require('./routes/upload');
-const postRouter = require('./routes/post');
 
 const app = express();
 
 app.locals.db = new Database();;
 
+app.use(
+  cors({
+    origin: process.env.URL,
+    credentials: true,
+  }),
+);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(__dirname + '/public'));
 
-app.use(
-  cors({
-    origin: process.env.URL,
-  }),
-);
-
-app.use('/', indexRouter);
-app.use('/user', userRouter);
-app.use('/users', usersRouter);
-app.use('/upload', uploadRouter);
-app.use('/post', postRouter);
+app.use('/api/v1', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
