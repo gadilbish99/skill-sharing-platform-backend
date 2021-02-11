@@ -12,8 +12,10 @@ router.post('/', async function(req, res) {
         msg: 'Submitted Post ' + post.id
       });
     }
+    else
+      throw new Error('Undefined user');
   } catch (err) {
-    res.send({
+    res.status(401).send({
       error: `${err.message}`,
     });
   }
