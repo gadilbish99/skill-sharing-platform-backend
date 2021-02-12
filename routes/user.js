@@ -62,33 +62,39 @@ router.post('/login', async function(req, res, next) {
 
 // 4. Get a new access token with a refresh token
 router.post('/refresh_token', async (req, res) => {
-  const db = req.app.locals.db;
-  const token = req.cookies.refreshtoken;
-  // If we don't have a token in our request
-  if (!token) return res.send({ accesstoken: '' });
-  // We have a token, let's verify it!
-  let payload = null;
   try {
-    payload = verify(token, process.env.REFRESH_TOKEN_SECRET);
-  } catch (err) {
-    return res.send({ accesstoken: '' });
+    const db = req.app.locals.db;
+    const token = req.cookies.refreshtoken;
+    // If we don't have a token in our request
+    if (!token) throw new Error('No token');
+    // We have a token, let's verify it!
+    let payload = null;
+    try {
+      payload = verify(token, process.env.REFRESH_TOKEN_SECRET);
+    } catch (error) {
+      throw error;
+    }
+    // token is valid, check if user exist
+    let user = await db.findUserByID(payload.userId);
+    if (!user) throw new Error('User does not exist');
+    // user exist, check if refreshtoken exist on user
+    if (user.refresh_token !== token)
+      throw new Error('Wrong refresh token');
+    // token exist, create new Refresh- and accesstoken
+    const accesstoken = createAccessToken(user);
+    const refreshtoken = createRefreshToken(user.id);
+    // update refreshtoken on user in db
+    // Could have different versions instead!
+    user = await db.setToken(user.id, refreshtoken);
+    if (!user) throw new Error('Database error');
+    // All good to go, send new refreshtoken and accesstoken
+    sendRefreshToken(res, refreshtoken);
+    return res.send({ accesstoken });
+  } catch (error) {
+    return res.status(401).send({
+      error: `${error.message}`,
+    });
   }
-  // token is valid, check if user exist
-  let user = await db.findUserByID(payload.userId);
-  if (!user) return res.send({ accesstoken: '' });
-  // user exist, check if refreshtoken exist on user
-  if (user.refresh_token !== token)
-    return res.send({ accesstoken: '' });
-  // token exist, create new Refresh- and accesstoken
-  const accesstoken = createAccessToken(user);
-  const refreshtoken = createRefreshToken(user.id);
-  // update refreshtoken on user in db
-  // Could have different versions instead!
-  user = await db.setToken(user.id, refreshtoken);
-  if (!user) throw new Error('Database error');
-  // All good to go, send new refreshtoken and accesstoken
-  sendRefreshToken(res, refreshtoken);
-  return res.send({ accesstoken });
 });
 
 module.exports = router;
