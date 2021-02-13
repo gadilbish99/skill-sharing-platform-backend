@@ -1,21 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { isAuth } = require('../src/isAuth');
+const { auth } = require('../middleware/auth');
 
-router.post('/', async function(req, res) {  
+router.post('/', auth, async function(req, res) {  
   try {
-    const userId = isAuth(req);
-    if (userId !== null) {
-      const db = req.app.locals.db;
-      const post = await db.addPost(req.body);
-      res.send({
-        msg: 'Submitted Post ' + post.id
-      });
-    }
-    else
-      throw new Error('Undefined user');
+    const db = req.app.locals.db;
+    const post = await db.addPost(req.body);
+    res.send({
+      msg: 'Submitted Post ' + post.id
+    });
   } catch (err) {
-    res.status(401).send({
+    res.send({
       error: `${err.message}`,
     });
   }
