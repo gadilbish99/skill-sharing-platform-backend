@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const multer = require("multer");
+const auth = require('../middleware/auth');
 
 const storage = multer.diskStorage({
   destination: "./public/uploads/",
@@ -15,7 +16,7 @@ const upload = multer({
   limits:{fileSize: 10000000}
 });
 
-router.post("/", upload.single("image"), (req, res) => {
+router.post("/", auth, upload.single("image"), (req, res) => {
   res.send('uploads/' + req.file.filename);
 });
 

@@ -8,7 +8,7 @@ const {
   createRefreshToken,
   sendRefreshToken,
   sendAccessToken,
-} = require('../src/tokens');
+} = require('../tokens');
 
 router.post('/register', async function(req, res, next) {
   const db = req.app.locals.db;

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const PostModel = require('./db/post.js');
-const UserModel = require('./db/user.js');
+const PostModel = require('./models/post.js');
+const UserModel = require('./models/user.js');
 
 const server = 'localhost:27017'; // REPLACE WITH YOUR DB SERVER
 const database = 'skill-sharing-platform';      // REPLACE WITH YOUR DB NAME

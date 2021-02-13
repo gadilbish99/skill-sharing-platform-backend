@@ -4,13 +4,13 @@ const { sign } = require('jsonwebtoken');
 // ----------------------------------
 const createAccessToken = (user) => {
   return sign({ "userId" : user.id}, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: '15m',
+    expiresIn: '2000'//'15m',
   });
 };
 
 const createRefreshToken = userId => {
   return sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: '7d',
+    expiresIn: '10000'//'7d',
   });
 };
 
