@@ -23,7 +23,7 @@ router.post('/register', async function(req, res, next) {
     // 3. Insert the user in "database"
     user = await db.addUser(req.body);
     if (!user) throw new Error('Database error');
-    res.send('User Created');
+    res.status(201).send('User Created');
   } catch (err) {
     res.send({
       error: `${err.message}`,
@@ -60,7 +60,7 @@ router.post('/login', async function(req, res, next) {
   }
 });
 
-// 4. Get a new access token with a refresh token
+// Get a new access token with a refresh token
 router.post('/refresh_token', async (req, res) => {
   try {
     const db = req.app.locals.db;

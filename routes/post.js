@@ -6,8 +6,8 @@ router.post('/', auth, async function(req, res) {
   try {
     const db = req.app.locals.db;
     const post = await db.addPost(req.body);
-    res.send({
-      msg: 'Submitted Post ' + post.id
+    res.status(201).send({
+      msg: 'Post Created'
     });
   } catch (err) {
     res.send({
