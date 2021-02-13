@@ -1,23 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-const multer = require("multer");
-const auth = require('../middleware/auth');
+const auth = require('../middlewares/auth');
+const upload = require('../utils/upload')
 
-const storage = multer.diskStorage({
-  destination: "./public/uploads/",
-  filename: function(req, file, cb){
-     cb(null,"image" + Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({
-  storage: storage,
-  limits:{fileSize: 10000000}
-});
-
-router.post("/", auth, upload.single("image"), (req, res) => {
-  res.send('uploads/' + req.file.filename);
+router.post("/", auth, (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      let statusCode = 400;
+      switch (err.message) {
+        case 'File too large':
+          statusCode = 413;
+          break;
+        default:
+          break;
+      }
+      res.status(statusCode).send({
+        error: `${err.message}`,
+      });
+    }
+    else
+      res.send('uploads/' + req.file.filename);    
+  })
 });
 
 module.exports = router;
