@@ -38,10 +38,10 @@ router.post('/login', async function(req, res, next) {
   try {
     // 1. Find user in array. If not exist send error
     let user = await db.findUser(email);
-    if (!user) throw new Error('User does not exist');
+    if (!user) throw new Error('Incorrect email address or password');
     // 2. Compare crypted password and see if it checks out. Send error if not
     const valid = await compare(password, user.password);
-    if (!valid) throw new Error('Password not correct');
+    if (!valid) throw new Error('Incorrect email address or password');
     // 3. Create Refresh- and Accesstoken
     const accesstoken = createAccessToken(user);
     const refreshtoken = createRefreshToken(user.id);
