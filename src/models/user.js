@@ -5,16 +5,19 @@ const UserSchema = new mongoose.Schema({
     firstName: { 
         type: String,
         required: true,
+        trim: true,
         max: 100
     },
     lastName: { 
         type: String,
         required: true,
+        trim: true,
         max: 100
     },
     email: { 
         type: String,
         required: true,
+        trim: true,
         unique: true,
         lowercase: true,
         validate: (value) => {
@@ -25,6 +28,7 @@ const UserSchema = new mongoose.Schema({
     password: { 
         type: String, 
         required: true,
+        trim: true,
         max: 255
     },
     created_at: { 
@@ -32,10 +36,12 @@ const UserSchema = new mongoose.Schema({
         default: Date.now 
     },
     refresh_token: {
-        type: String
+        type: String,
+        trim: true
     },
     isAdmin: {
         type: Boolean,
+        trim: true,
         default: false
     }
 });
