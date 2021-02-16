@@ -32,8 +32,7 @@ class Database {
   }
 
   async getAllPosts() {
-    const posts = await PostModel.find({}, '_id title image').sort({date:-1});
-    console.log(posts)
+    const posts = await PostModel.find({}, '_id title image').sort({updatedAt:-1});
     return posts;
   }
 

@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 const PostSchema = new mongoose.Schema({
-    date: { 
-        type: Date, 
-        default: Date.now
-    },
     title: {
         type: String,
         required: true,
@@ -23,6 +19,9 @@ const PostSchema = new mongoose.Schema({
         trim: true,
         default: false
     }
+}, 
+{
+    timestamps: true
 });
 PostSchema.plugin(mongoosePaginate);
 
