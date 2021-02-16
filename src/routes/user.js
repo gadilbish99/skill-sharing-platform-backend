@@ -9,8 +9,9 @@ const {
   sendRefreshToken,
   sendAccessToken,
 } = require('../tokens');
+const checkBody = require('../middleware/checkBody');
 
-router.post('/register', async function(req, res, next) {
+router.post('/register', checkBody, async function(req, res, next) {
   const db = req.app.locals.db;
   const { email, password } = req.body;
 
