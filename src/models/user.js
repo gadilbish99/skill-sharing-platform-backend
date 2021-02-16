@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     firstName: { 
         type: String,
         required: true,
@@ -31,10 +31,6 @@ const UserSchema = new mongoose.Schema({
         trim: true,
         max: 255
     },
-    created_at: { 
-        type: Date, 
-        default: Date.now 
-    },
     refresh_token: {
         type: String,
         trim: true
@@ -44,6 +40,9 @@ const UserSchema = new mongoose.Schema({
         trim: true,
         default: false
     }
+}, 
+{ 
+    timestamps: true 
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', userSchema);
