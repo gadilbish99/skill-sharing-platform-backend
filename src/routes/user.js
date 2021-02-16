@@ -8,7 +8,7 @@ const {
   createRefreshToken,
   sendRefreshToken,
   sendAccessToken,
-} = require('../tokens');
+} = require('../utils/tokens');
 const checkBody = require('../middleware/checkBody');
 
 router.post('/register', checkBody, async function(req, res, next) {
