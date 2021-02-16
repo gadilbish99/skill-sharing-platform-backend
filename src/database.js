@@ -32,7 +32,11 @@ class Database {
   }
 
   async getAllPosts() {
-    const posts = await PostModel.find().sort({date:-1});
+    const posts = await PostModel.find({}, {
+      body: 0, 
+      date: 0,
+      __v: 0, 
+    }).sort({date:-1});
     return posts;
   }
 
