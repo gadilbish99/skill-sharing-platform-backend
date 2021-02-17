@@ -5,12 +5,12 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-const Database = require('./src/database');
+const database = require('./src/utils/database');
 const indexRouter = require('./src/routes/index');
 
 const app = express();
 
-app.locals.db = new Database();;
+database.connect();
 
 app.use(
   cors({
