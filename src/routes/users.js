@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const userController = require('../controllers/user');
 
-router.get('/', auth, async function(req, res, next) {
-  const db = req.app.locals.db;
-  const users = await db.getAllUsers();
-  res.send(users);
-});
+router.get('/', auth, userController.list);
 
 module.exports = router;
 
