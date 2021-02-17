@@ -16,17 +16,14 @@ const createRefreshToken = userId => {
 
 // Send tokens
 // ----------------------------------
-const sendAccessToken = (res, req, accesstoken) => {
-  res.send({
-    accesstoken,
-    email: req.body.email
-  });
+const sendAccessToken = (res, accesstoken) => {
+  res.send({ accesstoken });
 };
 
 const sendRefreshToken = (res, token) => {
-  res.cookie('refreshtoken', token, {
+  res.cookie('refreshToken', token, {
     httpOnly: true,
-    path: '/api/v1/user/refresh_token',
+    path: '/api/v1/auth/refresh_token',
   });
 };
 

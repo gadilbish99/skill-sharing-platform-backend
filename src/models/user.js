@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         max: 255
     },
-    refresh_token: {
+    refreshToken: {
         type: String,
         trim: true
     },
