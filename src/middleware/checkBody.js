@@ -1,4 +1,3 @@
-
 const checkBody = (req, res, next) => {
   const fields = ["firstName", "lastName", "email", "password"];
   try {

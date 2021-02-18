@@ -7,7 +7,7 @@ const auth = (req, res, next) => {
     // Based on 'Bearer ksfljrewori384328289398432'
     const token = authorization.split(' ')[1];
     const { userId } = verify(token, process.env.ACCESS_TOKEN_SECRET);
-    if (userId && userId !== null) {
+    if (userId) {
       req.userId = userId
       next();
     }

@@ -1,5 +1,4 @@
 const UserModel = require('../models/user');
-const { hash, compare } = require('bcryptjs');
 const {
   createAccessToken,
   createRefreshToken,
@@ -9,15 +8,7 @@ const {
 
 const create = async (req, res) => {    
   try {
-    const { email, password } = req.body;
-    // 1. Check if the user exist
-    let user = await UserModel.findOne({ email: email });
-    if (user) 
-      throw new Error('User already exist');
-    // 2. If not user exist already, hash the password
-    req.body.password = await hash(password, 10);
-    // 3. Insert the user in "database"
-    user = await UserModel.create(req.body);
+    const user = await UserModel.create(req.body);
     if (user) 
       res.status(201).send({ 
         msg: 'User Created' 
@@ -91,26 +82,20 @@ const destroy = async (req, res) => {
 
 const login = async (req, res) => {  
   try {
-    const { email, password } = req.body;
-    // 1. Find user in array. If not exist send error
-    let user = await UserModel.findOne({ email: email });
-    if (!user) 
-      throw new Error('Incorrect email address or password');
-    // 2. Compare crypted password and see if it checks out. Send error if not
-    const valid = await compare(password, user.password);
-    if (!valid) 
-      throw new Error('Incorrect email address or password');
-    // 3. Create Refresh- and Accesstoken
+    let user = await UserModel.findByCredentials(req.body);
+    // Create Refresh- and Accesstoken
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user.id);
-
-    // 4. Store Refreshtoken with user in "db"
-    user = await UserModel.findByIdAndUpdate(user.id, { refreshToken: refreshToken });
-    if (!user) 
+    // Store Refreshtoken with user in "db"
+    user = await UserModel.findByIdAndUpdate(user.id, { refreshToken });
+    if (user){
+      // Send token. Refreshtoken as a cookie and accesstoken as a regular response
+      sendRefreshToken(res, refreshToken);
+      sendAccessToken(res, accessToken);
+    }
+    else
       throw new Error('Database error');
-    // 5. Send token. Refreshtoken as a cookie and accesstoken as a regular response
-    sendRefreshToken(res, refreshToken);
-    sendAccessToken(res, accessToken);
+
   } catch (err) {
     res.status(400).send({
       error: `${err.message}`,
