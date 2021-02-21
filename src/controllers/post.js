@@ -46,7 +46,7 @@ const show = async (req, res) => {
 
 const update = async (req, res) => {    
   try {
-    const post = await PostModel.findByIdAndUpdate(req.params.id);
+    const post = await PostModel.findByIdAndUpdate(req.params.id, req.body);
     if (post)
       res.send({ 
         msg: 'Post Updated' 
